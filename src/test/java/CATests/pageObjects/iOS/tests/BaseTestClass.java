@@ -3,6 +3,7 @@ package CATests.pageObjects.iOS.tests;
 import CATests.pageObjects.iOS.tests.transport.AddressPageTest;
 import CATests.pageObjects.iOS.tests.transport.TimeAndVehiclePageTest;
 import CATests.pageObjects.iOS.tests.transport.OrderDetailsPageTest;
+import CATests.pageObjects.iOS.tests.transport.OrderSummaryPageTest;
 import CATests.utils.ConfigUpdater;
 import CATests.utils.ConfigLoader;
 import CATests.utils.ExcelReader;
@@ -147,10 +148,27 @@ public class BaseTestClass {
                 testOrderDetailsPage(testData);
                 test.pass("select the cargo compensation button successfully");
                 test.pass("select the passenger compensation button successfully");
+                test.pass("select the amount of passengers successfully");
+                test.pass("select the amount of cart successfully");
+                test.pass("select the cart and driver options successfully");
+                test.pass("select the cross harbour tunnel option successfully");
+                test.pass("select the move door-to-door option successfully");
+                test.pass("select the transport or dispose waste option successfully");
+                test.pass("Fill in the contact information successfully");
             } catch (Exception e){
                 test.fail("OrderDetails Page test failed: " + e.getMessage());
             }
 
+            //test the order summary page
+            try{
+                test.info("Test the order summary page");
+                System.out.println("Enter the OrderSummary Page");
+                testOderSummaryPage(testData);
+                test.pass("select the tip options successfully");
+
+            } catch(Exception e){
+                test.fail("Order Summary Page test failed: " + e.getMessage());
+            }
             //Mark the test as passed
             test.pass("All Tests passed successfully!");
 
@@ -206,5 +224,10 @@ public class BaseTestClass {
     private void testOrderDetailsPage(Map<String, String> testData){
         OrderDetailsPageTest orderDetailsPageTest = new OrderDetailsPageTest(driver);
         orderDetailsPageTest.testAutomateTheOrderDetailsPage();
+    }
+
+    private void testOderSummaryPage(Map<String, String> testData){
+        OrderSummaryPageTest orderSummaryPageTest = new OrderSummaryPageTest(driver);
+        orderSummaryPageTest.testAutomateTheOrderSummaryPage();
     }
 }

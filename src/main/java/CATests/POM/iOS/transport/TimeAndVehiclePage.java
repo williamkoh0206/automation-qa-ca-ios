@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.DayOfWeek;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TimeAndVehiclePage extends AbstractPageClass{
     // call the configloader to get the values we want to input
@@ -47,20 +49,24 @@ public class TimeAndVehiclePage extends AbstractPageClass{
     @iOSXCUITFindBy(className = "XCUIElementTypePickerWheel")
     private WebElement hourlyRentalOptions;
 
+    //find the vehicle option table
+    @iOSXCUITFindBy(className = "XCUIElementTypeTable")
+    private WebElement vehicleOptionTable;
+
     //click on van option
-    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTable/XCUIElementTypeCell[2]")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTable//XCUIElementTypeCell[.//XCUIElementTypeStaticText[@value='Van']]")
     private WebElement vanOption;
 
     //click on premium van option
-    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTable/XCUIElementTypeCell[3]")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTable//XCUIElementTypeCell[.//XCUIElementTypeStaticText[@value='Premium Van']]")
     private WebElement premiumVanOption;
 
     //click on the 5.5 truck option
-    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTable/XCUIElementTypeCell[4]")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTable//XCUIElementTypeCell[.//XCUIElementTypeStaticText[@value='5t Truck']]")
     private WebElement fivePointFiveTruckOption;
 
     //click on the 9 truck option
-    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTable/XCUIElementTypeCell[5]")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTable//XCUIElementTypeCell[.//XCUIElementTypeStaticText[@value='9t Truck']]")
     private WebElement nineTruckOption;
 
     //click on the next button
@@ -226,6 +232,14 @@ public class TimeAndVehiclePage extends AbstractPageClass{
             else if (vehicleType.equalsIgnoreCase("Premium Van")){
                 WebElement buttonPremiumVanVisible = waitForVisibility(premiumVanOption);
                 buttonPremiumVanVisible.click();
+                //For coordination issue
+//                int premiumVanXaxis = 213;
+//                int premiumVanYaxis = 517;
+//                //create a map to hold the sideMenuIcon coordinates
+//                Map<String, Object> args = new HashMap<>();
+//                args.put("x",premiumVanXaxis);
+//                args.put("y",premiumVanYaxis);
+//                driver.executeScript("mobile: tap", args);
                 return true;
             }
             else if (vehicleType.equalsIgnoreCase("5.5t Truck")){
