@@ -4,6 +4,8 @@ import CATests.pageObjects.iOS.tests.transport.AddressPageTest;
 import CATests.pageObjects.iOS.tests.transport.TimeAndVehiclePageTest;
 import CATests.pageObjects.iOS.tests.transport.OrderDetailsPageTest;
 import CATests.pageObjects.iOS.tests.transport.OrderSummaryPageTest;
+import DATests.pageObjects.iOS.tests.DABaseTestClass;
+
 import CATests.utils.ConfigUpdater;
 import CATests.utils.ConfigLoader;
 import CATests.utils.ExcelReader;
@@ -11,6 +13,8 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.options.XCUITestOptions;
 import org.testng.annotations.Test;
 import CATests.utils.ExtentManager;
+import CATests.utils.GlobalState;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,6 +36,8 @@ public class BaseTestClass {
     private static final String EXCEL_FILE_PATH = "src/main/resources/testdata.xlsx";
     private ExtentReports extent;
     private ExtentTest test;
+    public static String globalOrderID;
+    public static String globalPickupCode;
 
     @BeforeSuite
     public void setupExtent()throws IOException{
@@ -165,9 +171,45 @@ public class BaseTestClass {
                 System.out.println("Enter the OrderSummary Page");
                 testOderSummaryPage(testData);
                 test.pass("select the tip options successfully");
-
+                test.pass("select the payment options successfully");
+                test.pass("place the order successfully");
+                System.out.println("Completed place order successfully");
+                //wait for the order summary being loaded
+                Thread.sleep(3000);
             } catch(Exception e){
                 test.fail("Order Summary Page test failed: " + e.getMessage());
+            }
+
+            //Reload properities to ensure the latest value is read
+            configLoader.reload();
+            String cancelFlag = configLoader.getProperty("CANCEL_FLAG");
+            System.out.println("The cancel flag is " + cancelFlag);
+
+            //check the cancel flag before running DA tests
+            if(cancelFlag.equalsIgnoreCase("false")){
+                //Run DA tests
+                System.out.println("Start to run DA");
+                DABaseTestClass daBaseTest = new DABaseTestClass(driver, extent, test);
+                daBaseTest.runTestsWithOrderID(GlobalState.globalOrderID, GlobalState.globalPickUpCode);
+
+                //login to the DA app
+//                try{
+//                    test.info("Switched to DA app");
+//                    test.pass("Switched to DA app successfully");
+//                    test.info("login page");
+//                    test.pass("Entered login successfully");
+//                }catch(Exception e){
+//                    test.fail("Order Summary Page test failed: " + e.getMessage());
+//
+//                //Get the first order
+//                }
+//                try{
+//                    test.info("DA Landing Page");
+//                    test.pass("Clicked the ASAP sorting option successfully");
+//                    test.pass("Select the latest option successfully");
+//                }catch(Exception e){
+//                    test.fail("Order Summary Page test failed: " + e.getMessage());
+//                }
             }
             //Mark the test as passed
             test.pass("All Tests passed successfully!");

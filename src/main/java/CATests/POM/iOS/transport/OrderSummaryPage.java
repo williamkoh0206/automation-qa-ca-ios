@@ -51,7 +51,7 @@ public class OrderSummaryPage extends AbstractPageClass{
     private WebElement selectPaymentOption;
 
     @iOSXCUITFindBy(accessibility = "You can pay with any card added to this account or change account and payment methods")
-    private WebElement paymentOptionPopUp;
+    private WebElement creditCardPaymentOptionPopUp;
 
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@name='Cash']/following::XCUIElementTypeButton[1]")
     private WebElement cashOption;
@@ -62,6 +62,12 @@ public class OrderSummaryPage extends AbstractPageClass{
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[contains(@value, 'Faster Payment System')]/preceding::XCUIElementTypeButton[1]")
     private WebElement fpsOption;
 
+    @iOSXCUITFindBy(accessibility = "CANCEL_BUTTON")
+    private WebElement fpsPopUp;
+
+    @iOSXCUITFindBy(accessibility = "back")
+    private WebElement afterFpsPopUpBackBtn;
+
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[contains(@value, 'Pay by recipient')]/following::XCUIElementTypeButton[1]")
     private WebElement payByRecipientOption;
 
@@ -70,7 +76,6 @@ public class OrderSummaryPage extends AbstractPageClass{
 
     @iOSXCUITFindBy(accessibility = "ggv__order_summary__footer__button__place_order")
     private WebElement placeOrderBtn;
-
 
     public boolean selectTipsOption(){
         try{
@@ -127,30 +132,51 @@ public class OrderSummaryPage extends AbstractPageClass{
             String paymentMethod = configLoader.getProperty("PAYMENT_METHOD");
 
             //In case if the payment card popup comes out
-            Boolean paymentOptionPopUpVisible = clickIfVisible(paymentOptionPopUp,3 );
-            if(paymentOptionPopUpVisible == true){
-                WebElement payByRecipientOptionVisible = waitForVisibility(payByRecipientOption);
-                payByRecipientOptionVisible.click();
-            }
-            else if(paymentMethod.equalsIgnoreCase("Cash")){
-                WebElement cashOptionVisible = waitForVisibility(cashOption);
-                cashOptionVisible.click();
-            }
-            else if(paymentMethod.equalsIgnoreCase("FPS")){
-                WebElement fpsOptionVisible = waitForVisibility(fpsOption);
-                fpsOptionVisible.click();
-            }
-            else if(paymentMethod.equalsIgnoreCase("Pay by receipent")){
-                WebElement payByRecipientOptionVisible = waitForVisibility(payByRecipientOption);
-                payByRecipientOptionVisible.click();
-            }
-            else if(paymentMethod.equalsIgnoreCase("Wallet")){
-                WebElement walletOptionVisible = waitForVisibility(walletOption);
-                walletOptionVisible.click();
-            }
-            else if(paymentMethod.equalsIgnoreCase("Card")){
-                WebElement creditCardOptionVisible = waitForVisibility(creditCardOption);
-                creditCardOptionVisible.click();
+            boolean creditCardPaymentOptionPopUpVisible = clickIfVisible(creditCardPaymentOptionPopUp,2 );
+            if (creditCardPaymentOptionPopUpVisible) {
+                if (paymentMethod.equalsIgnoreCase("Cash")) {
+                    WebElement cashOptionVisible = waitForVisibility(cashOption);
+                    cashOptionVisible.click();
+                } else if (paymentMethod.equalsIgnoreCase("FPS")) {
+                    WebElement fpsOptionVisible = waitForVisibility(fpsOption);
+                    fpsOptionVisible.click();
+                    // Check if FPS popup occurs
+                    clickIfVisible(fpsPopUp, 2);
+                    clickIfVisible(afterFpsPopUpBackBtn, 1);
+                } else if (paymentMethod.equalsIgnoreCase("Pay by recipient")) {
+                    WebElement payByRecipientOptionVisible = waitForVisibility(payByRecipientOption);
+                    payByRecipientOptionVisible.click();
+                } else if (paymentMethod.equalsIgnoreCase("Wallet")) {
+                    WebElement walletOptionVisible = waitForVisibility(walletOption);
+                    walletOptionVisible.click();
+                } else if (paymentMethod.equalsIgnoreCase("Card")) {
+                    WebElement creditCardOptionVisible = waitForVisibility(creditCardOption);
+                    creditCardOptionVisible.click();
+                } else {
+                    throw new IllegalArgumentException("Invalid payment method: " + paymentMethod);
+                }
+            } else {
+                if (paymentMethod.equalsIgnoreCase("Cash")) {
+                    WebElement cashOptionVisible = waitForVisibility(cashOption);
+                    cashOptionVisible.click();
+                } else if (paymentMethod.equalsIgnoreCase("FPS")) {
+                    WebElement fpsOptionVisible = waitForVisibility(fpsOption);
+                    fpsOptionVisible.click();
+                    // Check if FPS popup occurs
+                    clickIfVisible(fpsPopUp, 2);
+                    clickIfVisible(afterFpsPopUpBackBtn, 1);
+                } else if (paymentMethod.equalsIgnoreCase("Pay by recipient")) {
+                    WebElement payByRecipientOptionVisible = waitForVisibility(payByRecipientOption);
+                    payByRecipientOptionVisible.click();
+                } else if (paymentMethod.equalsIgnoreCase("Wallet")) {
+                    WebElement walletOptionVisible = waitForVisibility(walletOption);
+                    walletOptionVisible.click();
+                } else if (paymentMethod.equalsIgnoreCase("Card")) {
+                    WebElement creditCardOptionVisible = waitForVisibility(creditCardOption);
+                    creditCardOptionVisible.click();
+                } else {
+                    throw new IllegalArgumentException("Invalid payment method: " + paymentMethod);
+                }
             }
             return true;
         } catch (Exception e){
