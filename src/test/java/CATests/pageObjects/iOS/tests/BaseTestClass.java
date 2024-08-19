@@ -11,6 +11,7 @@ import CATests.utils.ConfigLoader;
 import CATests.utils.ExcelReader;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.options.XCUITestOptions;
+import org.openqa.selenium.NoSuchSessionException;
 import org.testng.annotations.Test;
 import CATests.utils.ExtentManager;
 import CATests.utils.GlobalState;
@@ -21,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.time.Duration;
 import java.util.Map;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -74,9 +76,10 @@ public class BaseTestClass {
         configLoader = new ConfigLoader();
         configLoader.reload();
 
-        //Create a new test node in the report
-        String testName = testData.get("TEST_CASE");
-        test = extent.createTest(testName);
+//        //Create a new test node in the report
+//        String testName = testData.get("TEST_CASE");
+//        System.out.println("Test Name: " + testName);
+//        test = extent.createTest(testName);
     }
 
     private void updateConfig(Map<String, String> testData){
@@ -87,6 +90,11 @@ public class BaseTestClass {
     public void runTests(Map<String, String> testData) throws MalformedURLException{
         //update config with test data
         updateConfig(testData);
+
+        //Create a new test node in the report
+        String testName = testData.get("TEST_CASE");
+        System.out.println("Test Name: " + testName);
+        test = extent.createTest(testName);
 
         //open the client application
         openClientMobileApp();
@@ -191,25 +199,7 @@ public class BaseTestClass {
                 System.out.println("Start to run DA");
                 DABaseTestClass daBaseTest = new DABaseTestClass(driver, extent, test);
                 daBaseTest.runTestsWithOrderID(GlobalState.globalOrderID, GlobalState.globalPickUpCode);
-
-                //login to the DA app
-//                try{
-//                    test.info("Switched to DA app");
-//                    test.pass("Switched to DA app successfully");
-//                    test.info("login page");
-//                    test.pass("Entered login successfully");
-//                }catch(Exception e){
-//                    test.fail("Order Summary Page test failed: " + e.getMessage());
-//
-//                //Get the first order
-//                }
-//                try{
-//                    test.info("DA Landing Page");
-//                    test.pass("Clicked the ASAP sorting option successfully");
-//                    test.pass("Select the latest option successfully");
-//                }catch(Exception e){
-//                    test.fail("Order Summary Page test failed: " + e.getMessage());
-//                }
+                closeDriverApp();
             }
             //Mark the test as passed
             test.pass("All Tests passed successfully!");
@@ -240,6 +230,37 @@ public class BaseTestClass {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void closeDriverApp(){
+        if(driver != null){
+            try{
+                // Send the driver app to the background
+                driver.runAppInBackground(Duration.ofSeconds(-1));
+
+                //Wait for a short period to ensure the app is in the background
+                Thread.sleep(2000);
+
+                //Switch the customer app to the foreground
+                driver.activateApp("hk.gogovan.GoGoVanClient.staging");
+
+                //wait for the order rating page
+                Thread.sleep(8000);
+                System.out.println("Switched back to the customer app");
+            } catch (NoSuchSessionException e) {
+                System.err.println("Session is terminated or not started: " + e.getMessage());
+            } catch (Exception e) {
+                System.err.println("Error while switching apps: " + e.getMessage());
+            } finally {
+                try {
+                    // Quit the driver to end the session
+                    driver.quit();
+                    System.out.println("Driver session ended.");
+                } catch (Exception e) {
+                    System.err.println("Error while quitting the driver: " + e.getMessage());
+                }
+            }
         }
     }
 

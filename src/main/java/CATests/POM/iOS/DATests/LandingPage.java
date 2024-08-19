@@ -126,6 +126,7 @@ public class LandingPage extends AbstractPageClass {
                 args.put("x",beginDriverXaxis);
                 args.put("y",beginDriverYaxis);
                 driver.executeScript("mobile: tap", args);
+                Thread.sleep(2000);
             }
             System.out.println("After clicking the popup, attempting to begin driving");
             WebElement beginDriverBtnVisible = waitForVisibility(beginDriverBtn);

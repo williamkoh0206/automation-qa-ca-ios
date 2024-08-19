@@ -47,9 +47,15 @@ public class LoginPageTest {
         assertTrue(isLoginButtonVisible, "failed to click on the login button.");
         System.out.println("Click login button: Success");
 
+        //click the keychain popup in business account
+        boolean isKeyChainPopUpVisible = loginPage.confirmKeyChainPopup();
+        assertTrue(isKeyChainPopUpVisible, "failed to click on the keychain popup.");
+        System.out.println("Confirm keychain popup: Success");
+
         //enter the exit button after login successfully
         boolean isCloseButtonVisible = loginPage.clickCloseBtn();
         assertTrue(isCloseButtonVisible, "failed to click on the exit button.");
         System.out.println("Click Exit button: Success");
+
     }
 }

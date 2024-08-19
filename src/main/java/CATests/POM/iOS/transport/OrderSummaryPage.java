@@ -48,7 +48,10 @@ public class OrderSummaryPage extends AbstractPageClass{
     private WebElement applyCouponBtn;
 
     @iOSXCUITFindBy(accessibility = "Personal")
-    private WebElement selectPaymentOption;
+    private WebElement selectPersonalAccountPaymentOption;
+
+    @iOSXCUITFindBy(accessibility = "Business")
+    private WebElement selectBusinessAccountPaymentOption;
 
     @iOSXCUITFindBy(accessibility = "You can pay with any card added to this account or change account and payment methods")
     private WebElement creditCardPaymentOptionPopUp;
@@ -127,8 +130,15 @@ public class OrderSummaryPage extends AbstractPageClass{
 
     public boolean selectPaymentMethod(){
         try{
-            WebElement selectPaymentOptionVisible = waitForVisibility(selectPaymentOption);
-            selectPaymentOptionVisible.click();
+            String accountType = configLoader.getProperty("ACCOUNT_TYPE");
+            if(accountType.equalsIgnoreCase("personal")){
+                WebElement selectPersonalPaymentOptionVisible = waitForVisibility(selectPersonalAccountPaymentOption);
+                selectPersonalPaymentOptionVisible.click();
+            }
+            else if(accountType.equalsIgnoreCase("business")){
+                WebElement selectBusinessPaymentOptionVisible = waitForVisibility(selectBusinessAccountPaymentOption);
+                selectBusinessPaymentOptionVisible.click();
+            }
             String paymentMethod = configLoader.getProperty("PAYMENT_METHOD");
 
             //In case if the payment card popup comes out

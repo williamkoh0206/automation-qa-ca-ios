@@ -35,6 +35,10 @@ public class OrderDetailsPage extends AbstractPageClass{
     @iOSXCUITFindBy(accessibility = "Up to $10,000")
     private WebElement cargoStandardCompensationBtn;
 
+    //cargo premium compensation button
+    @iOSXCUITFindBy(accessibility = "Up to $20,000")
+    private WebElement cargoPremiumCompensationBtn;
+
     //passengers counter options(after received the id from developer)
 
     //goods longer than 6 feet option
@@ -123,6 +127,10 @@ public class OrderDetailsPage extends AbstractPageClass{
             else if(cargoOption.equalsIgnoreCase("Standard")){
                 WebElement standardCargoCompensationBtn = waitForVisibility(cargoStandardCompensationBtn);
                 standardCargoCompensationBtn.click();
+            }
+            else if(cargoOption.equalsIgnoreCase("Premium")){
+                WebElement premiumCargoCompensationBtn = waitForVisibility(cargoPremiumCompensationBtn);
+                premiumCargoCompensationBtn.click();
             }
             return true;
         } catch (Exception e){

@@ -40,8 +40,20 @@ public class LoginPage extends AbstractPageClass {
     @iOSXCUITFindBy(accessibility = "login_password__button__login")
     private WebElement loginButton;
 
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@name='Log in']")
+    private WebElement loginButtonForBusinessAccount;
+
     @iOSXCUITFindBy(accessibility = "profile__header__navigation_button__close")
     private WebElement closeButton;
+
+    @iOSXCUITFindBy(accessibility = "close")
+    private WebElement closeButtonForBusinessAccount;
+
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@name='Password']")
+    private WebElement businessAccountPasswordField;
+
+    @iOSXCUITFindBy(accessibility = "Not Now")
+    private WebElement keyChainNotNowButton;
 
     //functions:
     // open settings
@@ -105,15 +117,19 @@ public class LoginPage extends AbstractPageClass {
     //enter password
    public boolean enterPassword(){
         try{
-            WebElement passwordInputFieldVisible = waitForVisibility(passwordInputField);
-            passwordInputFieldVisible.click();
+            String accountType = configLoader.getProperty("ACCOUNT_TYPE");
             String password = configLoader.getProperty("PASSWORD");
-            passwordInputField.sendKeys(password);
-            //press the enter button
-            Actions actions = new Actions(driver);
-            actions.sendKeys(passwordInputField, Keys.RETURN).perform();
+            System.out.println("Account Type is: " + accountType);
+            if(accountType.equalsIgnoreCase("personal")){
+                WebElement passwordInputFieldVisible = waitForVisibility(passwordInputField);
+                passwordInputFieldVisible.click();
+                passwordInputField.sendKeys(password);
+            } else if (accountType.equalsIgnoreCase("business")) {
+                WebElement businessPasswordInputFieldVisible = waitForVisibility(businessAccountPasswordField);
+                businessPasswordInputFieldVisible.click();
+                businessAccountPasswordField.sendKeys(password);
+            }
             return true;
-
         }catch (Exception e){
             e.printStackTrace();
             return false;
@@ -123,8 +139,14 @@ public class LoginPage extends AbstractPageClass {
    //click login button
     public boolean clickLoginBtn(){
         try {
-            WebElement loginButtonVisible = waitForVisibility(loginButton);
-            loginButtonVisible.click();
+            String accountType = configLoader.getProperty("ACCOUNT_TYPE");
+            if(accountType.equalsIgnoreCase("personal")){
+                WebElement loginButtonVisible = waitForVisibility(loginButton);
+                loginButtonVisible.click();
+            } else if (accountType.equalsIgnoreCase("business")) {
+                WebElement loginButtonForBusinessVisible = waitForVisibility(loginButtonForBusinessAccount);
+                loginButtonForBusinessVisible.click();
+            }
             return true;
         } catch (Exception e) {
             System.out.println("Error clicking the login button: " + e.getMessage());
@@ -137,9 +159,35 @@ public class LoginPage extends AbstractPageClass {
         try{
             WebElement closeButtonVisible = waitForVisibility(closeButton);
             closeButtonVisible.click();
+//            String accountType = configLoader.getProperty("ACCOUNT_TYPE");
+//            if(accountType.equalsIgnoreCase("personal")){
+//                WebElement closeButtonVisible = waitForVisibility(closeButton);
+//                closeButtonVisible.click();
+//            }
+//            else if(accountType.equalsIgnoreCase("business")){
+//                WebElement closeButtonVisible = waitForVisibility(closeButton);
+//                closeButtonVisible.click();
+//                WebElement closeButtonForBusinessAccountVisible = waitForVisibility(closeButtonForBusinessAccount);
+//                closeButtonForBusinessAccountVisible.click();
+//            }
             return true;
         }catch (Exception e){
             System.out.println("Error clicking the close button: " + e.getMessage());
+            return false;
+        }
+    }
+
+    //confirm keychain popup in business account
+    public boolean confirmKeyChainPopup(){
+        try{
+            String accountType = configLoader.getProperty("ACCOUNT_TYPE");
+            if(accountType.equalsIgnoreCase("Business")){
+                WebElement keyChainNotNowButtonVisible = waitForVisibility(keyChainNotNowButton);
+                keyChainNotNowButtonVisible.click();
+            }
+            return true;
+        }catch (Exception e){
+            System.out.println("Error clicking the keychain popup button: " + e.getMessage());
             return false;
         }
     }

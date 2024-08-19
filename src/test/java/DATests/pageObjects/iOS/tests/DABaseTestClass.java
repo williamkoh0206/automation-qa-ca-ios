@@ -55,9 +55,19 @@ public class DABaseTestClass {
                 testAutomatedTheDALandingPage();
                 test.pass("Clicked the ASAP sorting option successfully");
                 test.pass("Select the latest option successfully");
+                test.pass("Pickup the order successfully");
+                test.pass("complete the order successfully");
             } catch (Exception e){
                 test.fail("Test failed: " + e.getMessage());
             }
+            try{
+                test.info("DA Logout Page");
+                testAutomateTheLogoutPage();
+                test.pass("Clicked logout successfully");
+            } catch (Exception e){
+                test.fail("Test failed: " + e.getMessage());
+            }
+
             //Reload properities to ensure latest value is read
 //            configLoader.reload();
 //            String orderType = configLoader.getProperty("ORDER_TYPE");
@@ -124,6 +134,10 @@ public class DABaseTestClass {
     private void testAutomatedTheDALandingPage(){
         LandingPageTest landingPageTest = new LandingPageTest(driver);
         landingPageTest.testAutomatedTheDALandingPage();
+    }
 
+    private void testAutomateTheLogoutPage(){
+        LogoutPageTest logoutPageTest = new LogoutPageTest(driver);
+        logoutPageTest.testAutomateTheDALogoutPage();
     }
 }

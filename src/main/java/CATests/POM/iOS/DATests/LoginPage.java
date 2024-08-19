@@ -73,14 +73,14 @@ public class LoginPage extends AbstractPageClass{
             System.out.println("clear the password field first");
             passwordInputVisible.sendKeys(driverPassword);
 
-            //Press the enter button
-            Actions actions = new Actions(driver);
-            actions.sendKeys(driverPassword, Keys.RETURN).perform();
-            System.out.println("Password entered and enter key pressed");
-
             // Dismiss the keyboard
             driver.hideKeyboard();
             System.out.println("Keyboard dismissed");
+
+            //Press the enter button
+//            Actions actions = new Actions(driver);
+//            actions.sendKeys(driverPassword, Keys.RETURN).perform();
+//            System.out.println("Password entered and enter key pressed");
             return true;
         } catch(Exception e){
             System.out.println("Error entering password: " + e.getMessage());

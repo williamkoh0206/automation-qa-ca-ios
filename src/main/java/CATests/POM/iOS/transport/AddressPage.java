@@ -59,7 +59,16 @@ public class AddressPage extends AbstractPageClass {
 
     public boolean clickWhereFromBtn(){
         try{
-            whereFromButton.click();
+            String accountType = configLoader.getProperty("ACCOUNT_TYPE");
+            if(accountType.equalsIgnoreCase("Personal")){
+                WebElement whereFromButtonVisible = waitForVisibility(whereFromButton);
+                whereFromButtonVisible.click();
+            } else if (accountType.equalsIgnoreCase("Business")){
+                //Wait 2 seconds for the element to be visible
+                Thread.sleep(2000);
+                WebElement whereFromButtonVisible = waitForVisibility(whereFromButton);
+                whereFromButtonVisible.click();
+            }
             return true;
         }catch (Exception e){
             System.out.println("Error clicking the where from button: " + e.getMessage());
