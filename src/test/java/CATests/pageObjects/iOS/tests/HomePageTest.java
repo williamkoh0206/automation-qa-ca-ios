@@ -17,7 +17,7 @@ public class HomePageTest {
         System.out.println("-- Home Page --");
 
         //click transport button
-        boolean isClicked = homePage.clickTransportButton();
+        boolean isClicked = homePage.selectOrderTypeButton();
         assertTrue(isClicked, "failed to click on the transport button");
         System.out.println("Click transport button: Success");
     }

@@ -1,9 +1,12 @@
 package CATests.pageObjects.iOS.tests;
 
+import CATests.POM.iOS.delivery.PickUpToPage;
+import CATests.pageObjects.iOS.tests.delivery.PickUpToPageTest;
 import CATests.pageObjects.iOS.tests.transport.AddressPageTest;
 import CATests.pageObjects.iOS.tests.transport.TimeAndVehiclePageTest;
 import CATests.pageObjects.iOS.tests.transport.OrderDetailsPageTest;
 import CATests.pageObjects.iOS.tests.transport.OrderSummaryPageTest;
+import CATests.pageObjects.iOS.tests.delivery.PickUpFromPageTest;
 import DATests.pageObjects.iOS.tests.DABaseTestClass;
 
 import CATests.utils.ConfigUpdater;
@@ -96,114 +99,158 @@ public class BaseTestClass {
         System.out.println("Test Name: " + testName);
         test = extent.createTest(testName);
 
+
         //open the client application
         openClientMobileApp();
 
+        configLoader.reload();
+
+        //List of testCase with testData
+        String orderType = configLoader.getProperty("ORDER_TYPE");
+        System.out.println("The type of order is " + orderType);
+
         try{
-            configLoader.reload();
+            if(orderType.equalsIgnoreCase("T")){
+                //LoginPage test case
+                try{
+                    test.info("Test LogIn Page");
+                    System.out.println("Starting testLoginPage");
+                    testLoginPage(testData);
+                    System.out.println("Completed testLoginPage");
+                    test.pass("testedLoginPage successfully");
+                } catch (Exception e){
+                    test.fail("LoginPage test failed: " + e.getMessage());
+                }
+                //HomePage test case of transport page
+                try{
+                    test.info("Test Transport Home Page");
+                    System.out.println("Enter the HomePage");
+                    testHomePage();
+                    System.out.println("Clicked on the Transport button");
+                    test.pass("Entered transport page successfully");
+                } catch (Exception e){
+                    test.fail("HomePage test failed: " + e.getMessage());
+                }
+                //AddressPage test case
+                try{
+                    test.info("Test Address Page");
+                    System.out.println("Enter the AddressPage");
+                    testAddressPage(testData);
+                    test.pass("click the where from input address successfully");
+                    test.pass("enter the from address text option successfully");
+                    test.pass("Click the where to input address successfully");
+                    test.pass("enter the to address text option successfully");
+                    test.pass("click the next button successfully");
+                    System.out.println("Completed testAddressPage");
+                } catch (Exception e){
+                    test.fail("AddressPage test failed: " + e.getMessage());
+                }
 
-            //List of testCase with testData
+                //TimeAndVehiclePage test case
+                try{
+                    test.info("Test TimeAndVehicle Page");
+                    System.out.println("Enter the TimeAndVehicle Page");
+                    testTimeAndVehiclePage(testData);
+                    test.pass("select the pickup date successfully");
+                    test.pass("select the pickup time successfully");
+                    test.pass("choose the hourly rental option successfully");
+                    test.pass("choose the vehicle type successfully");
+                    test.info("finish testing the TimeAndVehicle Page");
+                } catch (Exception e){
+                    test.fail("TimeAndVehicle Page test failed: " + e.getMessage());
+                }
 
-            //LoginPage test case
-            try{
-                test.info("Test LogIn Page");
-                System.out.println("Starting testLoginPage");
-                testLoginPage(testData);
-                System.out.println("Completed testLoginPage");
-                test.pass("testedLoginPage successfully");
-            } catch (Exception e){
-                test.fail("LoginPage test failed: " + e.getMessage());
+                //OrderDetailsPage test case
+                try{
+                    test.info("Test OrderDetails Page");
+                    System.out.println("Enter the OrderDetails Page");
+                    testOrderDetailsPage(testData);
+                    test.pass("select the cargo compensation button successfully");
+                    test.pass("select the passenger compensation button successfully");
+                    test.pass("select the amount of passengers successfully");
+                    test.pass("select the amount of cart successfully");
+                    test.pass("select the cart and driver options successfully");
+                    test.pass("select the cross harbour tunnel option successfully");
+                    test.pass("select the move door-to-door option successfully");
+                    test.pass("select the transport or dispose waste option successfully");
+                    test.pass("Fill in the contact information successfully");
+                } catch (Exception e){
+                    test.fail("OrderDetails Page test failed: " + e.getMessage());
+                }
+
+                //test the order summary page
+                try{
+                    test.info("Test the order summary page");
+                    System.out.println("Enter the OrderSummary Page");
+                    testOderSummaryPage(testData);
+                    test.pass("select the tip options successfully");
+                    test.pass("select the payment options successfully");
+                    test.pass("place the order successfully");
+                    System.out.println("Completed place order successfully");
+                    //wait for the order summary being loaded
+                    Thread.sleep(3000);
+                } catch(Exception e){
+                    test.fail("Order Summary Page test failed: " + e.getMessage());
+                }
+
+                //Reload properities to ensure the latest value is read
+                configLoader.reload();
+                String cancelFlag = configLoader.getProperty("CANCEL_FLAG");
+                System.out.println("The cancel flag is " + cancelFlag);
+
+                //check the cancel flag before running DA tests
+                if(cancelFlag.equalsIgnoreCase("false")){
+                    //Run DA tests
+                    System.out.println("Start to run DA");
+                    DABaseTestClass daBaseTest = new DABaseTestClass(driver, extent, test);
+                    daBaseTest.runTestsWithOrderID(GlobalState.globalOrderID, GlobalState.globalPickUpCode);
+                    closeDriverApp();
+                }
+                //Mark the test as passed
+                test.pass("All Tests passed successfully!");
             }
+            else if (orderType.equalsIgnoreCase("D")) {
+                //LoginPage test case
+                try{
+                    test.info("Test LogIn Page");
+                    System.out.println("Starting testLoginPage");
+                    testLoginPage(testData);
+                    System.out.println("Completed testLoginPage");
+                    test.pass("testedLoginPage successfully");
+                } catch (Exception e){
+                    test.fail("LoginPage test failed: " + e.getMessage());
+                }
+                //HomePage test case
+                try{
+                    test.info("Test Delivery Homepage Page");
+                    System.out.println("Enter the HomePage");
+                    testHomePage();
+                    System.out.println("Clicked on the Delivery button");
+                    test.pass("Entered delivery page successfully");
+                } catch(Exception e){
+                    test.fail("HomePage test failed: " + e.getMessage());
+                }
+                //PickupFromPage test case
+                try{
+                    test.info("Test Pickup From Page");
+                    System.out.println("Enter the pickup from page");
+                    testPickUpFromPage(testData);
+                    System.out.println("Filled in the pickup order details");
+                    test.pass("Filled the pickup information successfully");
+                } catch (Exception e){
+                    test.fail("PickupPage test failed: " + e.getMessage());
+                }
+                try{
+                    test.info("Test Pickup To Page");
+                    System.out.println("Enter the pickup to page");
+                    testPickUpToPage(testData);
+                    System.out.println("Filled in the pickup order details");
+                    test.pass("Filled the pickup information successfully");
+                } catch (Exception e){
+                    test.fail("PickupPage test failed: " + e.getMessage());
+                }
 
-            //HomePage test case of transport page
-            try{
-                test.info("Test Home Page");
-                System.out.println("Enter the HomePage");
-                testHomePage();
-                System.out.println("Clicked on the Transport button");
-                test.pass("testedTransportPage successfully");
-            } catch (Exception e){
-                test.fail("HomePage test failed: " + e.getMessage());
             }
-
-            //AddressPage test case
-            try{
-                test.info("Test Address Page");
-                System.out.println("Enter the AddressPage");
-                testAddressPage(testData);
-                test.pass("click the where from input address successfully");
-                test.pass("enter the from address text option successfully");
-                test.pass("Click the where to input address successfully");
-                test.pass("enter the to address text option successfully");
-                test.pass("click the next button successfully");
-                System.out.println("Completed testAddressPage");
-            } catch (Exception e){
-                test.fail("AddressPage test failed: " + e.getMessage());
-            }
-
-            //TimeAndVehiclePage test case
-            try{
-                test.info("Test TimeAndVehicle Page");
-                System.out.println("Enter the TimeAndVehicle Page");
-                testTimeAndVehiclePage(testData);
-                test.pass("select the pickup date successfully");
-                test.pass("select the pickup time successfully");
-                test.pass("choose the hourly rental option successfully");
-                test.pass("choose the vehicle type successfully");
-                test.info("finish testing the TimeAndVehicle Page");
-            } catch (Exception e){
-                test.fail("TimeAndVehicle Page test failed: " + e.getMessage());
-            }
-
-            //OrderDetailsPage test case
-            try{
-                test.info("Test OrderDetails Page");
-                System.out.println("Enter the OrderDetails Page");
-                testOrderDetailsPage(testData);
-                test.pass("select the cargo compensation button successfully");
-                test.pass("select the passenger compensation button successfully");
-                test.pass("select the amount of passengers successfully");
-                test.pass("select the amount of cart successfully");
-                test.pass("select the cart and driver options successfully");
-                test.pass("select the cross harbour tunnel option successfully");
-                test.pass("select the move door-to-door option successfully");
-                test.pass("select the transport or dispose waste option successfully");
-                test.pass("Fill in the contact information successfully");
-            } catch (Exception e){
-                test.fail("OrderDetails Page test failed: " + e.getMessage());
-            }
-
-            //test the order summary page
-            try{
-                test.info("Test the order summary page");
-                System.out.println("Enter the OrderSummary Page");
-                testOderSummaryPage(testData);
-                test.pass("select the tip options successfully");
-                test.pass("select the payment options successfully");
-                test.pass("place the order successfully");
-                System.out.println("Completed place order successfully");
-                //wait for the order summary being loaded
-                Thread.sleep(3000);
-            } catch(Exception e){
-                test.fail("Order Summary Page test failed: " + e.getMessage());
-            }
-
-            //Reload properities to ensure the latest value is read
-            configLoader.reload();
-            String cancelFlag = configLoader.getProperty("CANCEL_FLAG");
-            System.out.println("The cancel flag is " + cancelFlag);
-
-            //check the cancel flag before running DA tests
-            if(cancelFlag.equalsIgnoreCase("false")){
-                //Run DA tests
-                System.out.println("Start to run DA");
-                DABaseTestClass daBaseTest = new DABaseTestClass(driver, extent, test);
-                daBaseTest.runTestsWithOrderID(GlobalState.globalOrderID, GlobalState.globalPickUpCode);
-                closeDriverApp();
-            }
-            //Mark the test as passed
-            test.pass("All Tests passed successfully!");
-
         } catch (Exception e){
             //tests as failed
             test.fail("Test failed: " + e.getMessage());
@@ -272,6 +319,16 @@ public class BaseTestClass {
     private void testHomePage(){
         HomePageTest homePageTest = new HomePageTest(driver);
         homePageTest.testAutomateTheHomePage();
+    }
+
+    private void testPickUpFromPage(Map<String, String> testData){
+        PickUpFromPageTest pickUpFromPageTest = new PickUpFromPageTest(driver);
+        pickUpFromPageTest.testPickUpFromPage();
+    }
+
+    private void testPickUpToPage(Map<String, String> testDataa){
+        PickUpToPageTest pickUpToPageTest = new PickUpToPageTest(driver);
+        pickUpToPageTest.testPickUpToPage();
     }
 
     private void testAddressPage(Map<String, String> testData){
