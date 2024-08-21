@@ -1,5 +1,6 @@
 package CATests.pageObjects.iOS.tests;
 
+import CATests.POM.iOS.delivery.PackageInfoPage;
 import CATests.POM.iOS.delivery.PickUpToPage;
 import CATests.pageObjects.iOS.tests.delivery.PickUpToPageTest;
 import CATests.pageObjects.iOS.tests.transport.AddressPageTest;
@@ -7,6 +8,8 @@ import CATests.pageObjects.iOS.tests.transport.TimeAndVehiclePageTest;
 import CATests.pageObjects.iOS.tests.transport.OrderDetailsPageTest;
 import CATests.pageObjects.iOS.tests.transport.OrderSummaryPageTest;
 import CATests.pageObjects.iOS.tests.delivery.PickUpFromPageTest;
+import CATests.pageObjects.iOS.tests.delivery.PickUpTimePageTest;
+import CATests.pageObjects.iOS.tests.delivery.PackageInfoPageTest;
 import DATests.pageObjects.iOS.tests.DABaseTestClass;
 
 import CATests.utils.ConfigUpdater;
@@ -240,6 +243,7 @@ public class BaseTestClass {
                 } catch (Exception e){
                     test.fail("PickupPage test failed: " + e.getMessage());
                 }
+                //PickupToPage test case
                 try{
                     test.info("Test Pickup To Page");
                     System.out.println("Enter the pickup to page");
@@ -248,6 +252,28 @@ public class BaseTestClass {
                     test.pass("Filled the pickup information successfully");
                 } catch (Exception e){
                     test.fail("PickupPage test failed: " + e.getMessage());
+                }
+
+                //PickupTimePage test case
+                try{
+                    test.info("Test Pickup Time Page");
+                    System.out.println("Enter the pickup time page");
+                    testPickupTimePage(testData);
+                    System.out.println("Filled the pickupTime details");
+                    test.pass("Filled the pickup date");
+                    test.pass("Filled the pickup time");
+                } catch (Exception e){
+                    test.fail("PickupTimePage test failed: " + e.getMessage());
+                }
+                //PackageInfoPage test case
+                try{
+                    test.info("Test Pickup Info Page");
+                    System.out.println("Enter the package info page");
+                    testPackageInfoPage(testData);
+                    System.out.println("Select the package content type");
+                    test.pass("Selected the package content type successfully");
+                } catch (Exception e){
+                    test.fail("PackageInfoPage test failed: " + e.getMessage());
                 }
 
             }
@@ -321,6 +347,7 @@ public class BaseTestClass {
         homePageTest.testAutomateTheHomePage();
     }
 
+    //delivery order pages
     private void testPickUpFromPage(Map<String, String> testData){
         PickUpFromPageTest pickUpFromPageTest = new PickUpFromPageTest(driver);
         pickUpFromPageTest.testPickUpFromPage();
@@ -331,6 +358,17 @@ public class BaseTestClass {
         pickUpToPageTest.testPickUpToPage();
     }
 
+    private void testPickupTimePage(Map<String, String> testData){
+        PickUpTimePageTest pickUpTimePageTest = new PickUpTimePageTest(driver);
+        pickUpTimePageTest.testPickUpTimePage();
+    }
+
+    private void testPackageInfoPage(Map<String,String> testData){
+        PackageInfoPageTest packageInfoPageTest = new PackageInfoPageTest(driver);
+        packageInfoPageTest.testPackageInfoPage();
+    }
+
+    //transport order page
     private void testAddressPage(Map<String, String> testData){
         AddressPageTest addressPageTest = new AddressPageTest(driver);
         addressPageTest.testAutomateTheAddressPage();
