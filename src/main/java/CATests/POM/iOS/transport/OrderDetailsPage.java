@@ -340,12 +340,12 @@ public class OrderDetailsPage extends AbstractPageClass{
             String moveDoorToDoor = configLoader.getProperty("MOVE_DOOR_TO_DOOR");
             String transportOrDisposeWaste = configLoader.getProperty("TRANSPORT_OR_DISPOSE_WASTE");
             if (moveDoorToDoor.equalsIgnoreCase("true")){
-                WebElement moveDoorToDoorVisible = waitForVisibilityWithScroll(moveDoorToDoorOption);
+                WebElement moveDoorToDoorVisible = waitForVisibilityWithScroll(moveDoorToDoorOption,"Move door-to-door");
                 moveDoorToDoorVisible.click();
                 System.out.println("Clicked on the move door to door option");
             }
             if (transportOrDisposeWaste.equalsIgnoreCase("true")){
-                WebElement transportOrDisposeWasteVisible = waitForVisibilityWithScroll(transportOrDisposeWasteOption);
+                WebElement transportOrDisposeWasteVisible = waitForVisibilityWithScroll(transportOrDisposeWasteOption,"Transport or dispose waste");
                 transportOrDisposeWasteVisible.click();
                 System.out.println("Clicked on the transport or dispose waste option");
             }
@@ -359,7 +359,7 @@ public class OrderDetailsPage extends AbstractPageClass{
     //add contact info
     public boolean addContactInfo(){
         try{
-            WebElement contactInfoBtnVisible = waitForVisibilityWithScroll(orderContactInfoBtn);
+            WebElement contactInfoBtnVisible = waitForVisibilityWithScroll(orderContactInfoBtn,"Order contact info");
             contactInfoBtnVisible.click();
             System.out.println("Clicked contact info button");
 

@@ -43,6 +43,12 @@ public class DABaseTestClass {
             test.info("Switched to DA app");
             test.pass("Switched to DA app successfully");
 
+            //Reload properities to ensure latest value is ready
+            configLoader.reload();
+            String orderType = configLoader.getProperty("ORDER_TYPE");
+            System.out.println("The type of order is " + orderType);
+
+            //Login DA
             try{
                 test.info("DA login page");
                 testAutomateTheDALoginPage();
@@ -50,46 +56,50 @@ public class DABaseTestClass {
             } catch (Exception e){
                 test.fail("Test failed: " + e.getMessage());
             }
-            try{
-                test.info("DA Landing Page");
-                testAutomatedTheDALandingPage();
-                test.pass("Clicked the ASAP sorting option successfully");
-                test.pass("Select the latest option successfully");
-                test.pass("Pickup the order successfully");
-                test.pass("complete the order successfully");
-            } catch (Exception e){
-                test.fail("Test failed: " + e.getMessage());
-            }
-            try{
-                test.info("DA Logout Page");
-                testAutomateTheLogoutPage();
-                test.pass("Clicked logout successfully");
-            } catch (Exception e){
-                test.fail("Test failed: " + e.getMessage());
-            }
-
-            //Reload properities to ensure latest value is read
-//            configLoader.reload();
-//            String orderType = configLoader.getProperty("ORDER_TYPE");
-//            System.out.println("The type of order is " + orderType);
 
             //check the transport order
-
+            if(orderType.equalsIgnoreCase("T")){
+                try{
+                    test.info("DA Landing Page");
+                    testAutomatedTheDALandingPage();
+                    test.pass("Clicked the ASAP sorting option successfully");
+                    test.pass("Select the latest option successfully");
+                    test.pass("Pickup the order successfully");
+                    test.pass("complete the order successfully");
+                } catch (Exception e){
+                    test.fail("Test failed: " + e.getMessage());
+                }
+            }
             //check the delivery order
-
+            else if(orderType.equalsIgnoreCase("D")){
+                try{
+                    test.info("DA Delivery Page");
+                    testAutomatedTheDALandingDeliveryPage();
+                    test.pass("Clicked the delivery option");
+                    test.pass("Picked the delivery order");
+                } catch (Exception e){
+                    test.fail("Test failed " + e.getMessage());
+                }
+            }
+            //Logout page
+//            try{
+//                test.info("DA Logout Page");
+//                testAutomateTheLogoutPage();
+//                test.pass("Clicked logout successfully");
+//            } catch (Exception e){
+//                test.fail("Test failed: " + e.getMessage());
+//            }
             test.pass("Tested pass successfully");
 
-            //reload the properties to ensure the
         } catch (Exception e){
             //Mark the tests as failed
             test.fail("Test failed: " + e.getMessage());
         } finally {
             //close the app and switch back to the client app
+            switchBackToClientApp();
             System.out.println("in the finally block and going back to CA");
-//            switchBackToClientApp();
         }
     }
-
 
     public void switchToDriverApp(){
         if (driver != null){
@@ -117,7 +127,7 @@ public class DABaseTestClass {
                 driver.activateApp("hk.gogovan.GoGoVanClient.staging");
                 System.out.println("Switched back to the client app");
 
-                //wait for 5 seconds to furthe check
+                //wait for 5 seconds to further check
                 Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     System.err.println("Thread was interrupted: " + e.getMessage());
@@ -134,6 +144,11 @@ public class DABaseTestClass {
     private void testAutomatedTheDALandingPage(){
         LandingPageTest landingPageTest = new LandingPageTest(driver);
         landingPageTest.testAutomatedTheDALandingPage();
+    }
+
+    private void testAutomatedTheDALandingDeliveryPage(){
+        LandingDeliveryPageTest landingDeliveryPageTest = new LandingDeliveryPageTest(driver);
+        landingDeliveryPageTest.testAutomatedTheDALandingDeliveryPage();
     }
 
     private void testAutomateTheLogoutPage(){

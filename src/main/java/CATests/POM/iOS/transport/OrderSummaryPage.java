@@ -29,6 +29,9 @@ public class OrderSummaryPage extends AbstractPageClass{
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@value='No tip']/following::XCUIElementTypeStaticText[@value='$20'][1]")
     private WebElement twentyDollarTipsOption;
 
+    @iOSXCUITFindBy(accessibility = "$20")
+    private WebElement twentyDollarTipsForDelivery;
+
     @iOSXCUITFindBy(accessibility = "$30")
     private WebElement thirtyDollarTipsOption;
 
@@ -112,15 +115,29 @@ public class OrderSummaryPage extends AbstractPageClass{
     public boolean applyCoupon(){
         try{
             String couponFlag = configLoader.getProperty("COUPON");
+            String orderType = configLoader.getProperty("ORDER_TYPE");
             if(couponFlag.equalsIgnoreCase("false")){
                 return true;
             }
-            WebElement couponOptionVisible = waitForVisibility(couponOption);
-            couponOptionVisible.click();
-            WebElement couponCodeVisible = waitForVisibility(couponCode);
-            couponCodeVisible.click();
-            WebElement applyCouponVisible = waitForVisibility(applyCouponBtn);
-            applyCouponVisible.click();
+            else if(orderType.equalsIgnoreCase("T")){
+                WebElement couponOptionVisible = waitForVisibility(couponOption);
+                couponOptionVisible.click();
+                WebElement couponCodeVisible = waitForVisibility(couponCode);
+                couponCodeVisible.click();
+                WebElement applyCouponVisible = waitForVisibility(applyCouponBtn);
+                applyCouponVisible.click();
+                return true;
+            }
+            else if(orderType.equalsIgnoreCase("D"))
+            {
+                WebElement couponOptionVisible = waitForVisibilityWithScroll(couponOption,"Coupon");
+                couponOptionVisible.click();
+                WebElement couponCodeVisible = waitForVisibility(couponCode);
+                couponCodeVisible.click();
+                WebElement applyCouponVisible = waitForVisibility(applyCouponBtn);
+                applyCouponVisible.click();
+                return true;
+            }
             return true;
         } catch(Exception e){
             e.printStackTrace();
@@ -206,5 +223,4 @@ public class OrderSummaryPage extends AbstractPageClass{
             return false;
         }
     }
-
 }

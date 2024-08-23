@@ -1,5 +1,6 @@
 package CATests.pageObjects.iOS.tests;
 
+import CATests.utils.ConfigLoader;
 import io.appium.java_client.ios.IOSDriver;
 import org.testng.annotations.Test;
 import CATests.POM.iOS.LoginPage;

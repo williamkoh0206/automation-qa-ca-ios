@@ -52,7 +52,7 @@ public class AbstractPageClass {
         return false;
     }
 
-    public WebElement waitForVisibilityWithScroll(WebElement element){
+    public WebElement waitForVisibilityWithScroll(WebElement element, String elementText){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         boolean canScrollMore = true;
 
@@ -75,7 +75,7 @@ public class AbstractPageClass {
                     return visibleElement; //element is fully visible in the screen
                 } else {
                     System.out.println("Element is partically visible or covered, need to scroll further");
-                    jsHelper.scrollToElement("Review order");
+                    jsHelper.scrollToElement(elementText);
                     System.out.println("returned from scrolldown");
                     WebElement visibleElement2 = wait.until(ExpectedConditions.visibilityOf(element));
                     return visibleElement2;
@@ -83,7 +83,7 @@ public class AbstractPageClass {
             } catch(org.openqa.selenium.TimeoutException e){
                 // If the element is not visible within the timeout, scroll down using TouchAction
                 System.out.println("Element not visible, scrolling down");
-                jsHelper.scrollToElement("Review order");
+                jsHelper.scrollToElement(elementText);
 
                 // Small delay after each scroll to allow UI to update
                 try {

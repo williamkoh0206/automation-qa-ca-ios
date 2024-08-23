@@ -10,6 +10,7 @@ import CATests.pageObjects.iOS.tests.transport.OrderSummaryPageTest;
 import CATests.pageObjects.iOS.tests.delivery.PickUpFromPageTest;
 import CATests.pageObjects.iOS.tests.delivery.PickUpTimePageTest;
 import CATests.pageObjects.iOS.tests.delivery.PackageInfoPageTest;
+import CATests.pageObjects.iOS.tests.delivery.PlacedOrderDeliveryPageTest;
 import DATests.pageObjects.iOS.tests.DABaseTestClass;
 
 import CATests.utils.ConfigUpdater;
@@ -207,7 +208,7 @@ public class BaseTestClass {
                     System.out.println("Start to run DA");
                     DABaseTestClass daBaseTest = new DABaseTestClass(driver, extent, test);
                     daBaseTest.runTestsWithOrderID(GlobalState.globalOrderID, GlobalState.globalPickUpCode);
-                    closeDriverApp();
+//                    closeDriverApp();
                 }
                 //Mark the test as passed
                 test.pass("All Tests passed successfully!");
@@ -274,6 +275,50 @@ public class BaseTestClass {
                     test.pass("Selected the package content type successfully");
                 } catch (Exception e){
                     test.fail("PackageInfoPage test failed: " + e.getMessage());
+                }
+                //Order Summary page
+                try{
+                    test.info("Test the order summary page");
+                    System.out.println("Enter the OrderSummary Page");
+                    testOderSummaryPage(testData);
+                    test.pass("select the tip options successfully");
+                    test.pass("select the payment options successfully");
+                    test.pass("place the order successfully");
+                    System.out.println("Completed place order successfully");
+                    //wait for the order summary being loaded
+                    Thread.sleep(3000);
+                } catch(Exception e){
+                    test.fail("Order Summary Page test failed: " + e.getMessage());
+                }
+                //Placed Order Delivery page
+                try{
+                    test.info("Test placed order delivery page");
+                    System.out.println("Enter the PlacedDelivery Page");
+                    testPlacedOrderDeliveryPage(testData);
+                    test.pass("get the order ID successfully");
+                    test.pass("get the pickup code successfully");
+                    String cancelOrder = configLoader.getProperty("CANCEL_FLAG");
+                    if(cancelOrder.equalsIgnoreCase("true")){
+                        test.pass("Cancel order pressed");
+                        test.pass("Cancel order successfully");
+                    }
+                    System.out.println("Completed delivery page testing");
+                } catch (Exception e){
+                    test.fail("Placed Order Delivery Page test failed: " + e.getMessage());
+                }
+
+                //Reload properities to ensure the latest value is read
+                configLoader.reload();
+                String cancelFlag = configLoader.getProperty("CANCEL_FLAG");
+                System.out.println("The cancel flag is " + cancelFlag);
+
+                //check the cancel flag before running DA tests
+                if(cancelFlag.equalsIgnoreCase("false")){
+                    //Run DA tests
+                    System.out.println("Start to run DA");
+                    DABaseTestClass daBaseTest = new DABaseTestClass(driver, extent, test);
+                    daBaseTest.runTestsWithOrderID(GlobalState.globalOrderID, GlobalState.globalPickUpCode);
+//                    closeDriverApp();
                 }
 
             }
@@ -366,6 +411,11 @@ public class BaseTestClass {
     private void testPackageInfoPage(Map<String,String> testData){
         PackageInfoPageTest packageInfoPageTest = new PackageInfoPageTest(driver);
         packageInfoPageTest.testPackageInfoPage();
+    }
+
+    private void testPlacedOrderDeliveryPage(Map<String, String> testData){
+        PlacedOrderDeliveryPageTest placedOrderDeliveryPageTest = new PlacedOrderDeliveryPageTest(driver);
+        placedOrderDeliveryPageTest.testPlacedOrderDeliveryPage();
     }
 
     //transport order page
