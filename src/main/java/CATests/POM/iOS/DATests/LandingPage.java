@@ -92,6 +92,7 @@ public class LandingPage extends AbstractPageClass {
             if(pickOrderBtnVisibility){
                 WebElement pickOrderBtnVisible = waitForVisibility(pickOrderBtn);
                 pickOrderBtnVisible.click();
+                System.out.println("Picking order by click visible method");
             }
             else{
                 System.out.println("Try to use coordinate alternative to click the pick order button");
@@ -101,7 +102,10 @@ public class LandingPage extends AbstractPageClass {
                 args.put("x",pickOrderXaxis);
                 args.put("y",pickOrderYaxis);
                 driver.executeScript("mobile: tap", args);
+                System.out.println("Picking order by coordination method");
+                return true;
             }
+            System.out.println("Finish picking the order process");
             return true;
         } catch(Exception e){
             System.out.println("Error clicking order: " + e.getMessage());

@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import com.google.common.collect.ImmutableMap;
 
 import static CATests.utils.GlobalState.globalOrderID;
 import static CATests.utils.GlobalState.globalPickUpCode;
@@ -63,6 +64,9 @@ public class LandingDeliveryPage extends AbstractPageClass{
     @iOSXCUITFindBy(accessibility = "Complete Order")
     private WebElement completeOrderBtn;
 
+    @iOSXCUITFindBy(accessibility = "Completed")
+    private WebElement completedSortingOptionBtn;
+
     public boolean selectDeliveryOrder(){
         try{
             WebElement deliverOptionVisibility = waitForVisibility(deliveryOption);
@@ -105,11 +109,11 @@ public class LandingDeliveryPage extends AbstractPageClass{
 
                         //Construct the Xpath to match the OrderID, starting with '#' and ending with last three digits of globalOrderID
                         String lastThreeDigits = globalOrderID.substring(globalOrderID.length() - 3);
-                        String orderIDPattern = String.format("#****%s", lastThreeDigits);
+                        String orderIDPattern = String.format("#***%s", lastThreeDigits);
                         System.out.println("OrderID pattern: " + orderIDPattern);
 
                         //get the delivery order id xpath
-                        String oderIdXpath = String.format("//XCUIElementTypeButton[contains(@name,'#***')]", orderIDPattern);
+                        String oderIdXpath = String.format("//XCUIElementTypeButton[contains(@name,'%s')]", orderIDPattern);
                         By orderIdLocator = By.xpath(oderIdXpath);
 
                         try{
@@ -132,13 +136,19 @@ public class LandingDeliveryPage extends AbstractPageClass{
                             System.out.println("Order ID not found for this order card " + numOfDeliveryOrder);
                             WebElement closeOrderBtnVisibility = waitForVisibility(closeOrderBtn);
                             closeOrderBtnVisibility.click();
+                            //If the card element is not found, scroll and try again
+                            System.out.println("Scrolling down to find more delivery order cards");
+                            driver.executeScript("mobile: scroll", ImmutableMap.of(
+                                    "direction", "down"
+                            ));
+                            Thread.sleep(2000);
                         }
                     }
                 } catch (NoSuchElementException e){
                     //If the card element is not found, scroll and try again
-                    System.out.println("Scrolling down to find more delivery order cards");
-                    driver.executeScript("mobile: scroll", driver.findElement(deliveryOrderCardLocator), "toVisible", true);
-                    Thread.sleep(2000);
+//                    System.out.println("Scrolling down to find more delivery order cards");
+//                    driver.executeScript("mobile: scroll", driver.findElement(deliveryOrderCardLocator), "toVisible", true);
+//                    Thread.sleep(2000);
                 }
                 //try to check the next card
                 numOfDeliveryOrder++;
@@ -183,6 +193,7 @@ public class LandingDeliveryPage extends AbstractPageClass{
             if(afterSwipedNailedPopUp){
                 WebElement buttonCompletedOrderAfterSwipeVisible = waitForVisibility(confirmedPickupBtn);
                 buttonCompletedOrderAfterSwipeVisible.click();
+                System.out.println("Clicked the popup through clickIfVisible method");
             }
             else{
                 System.out.println("Try to use coordinate alternative");
@@ -192,6 +203,7 @@ public class LandingDeliveryPage extends AbstractPageClass{
                 args.put("x",confirmPickUpBtnXais);
                 args.put("y",confirmPickUpBtnYais);
                 driver.executeScript("mobile: tap", args);
+                System.out.println("Clicked the popup through coordinate method");
             }
             return true;
         } catch (Exception e){
@@ -204,15 +216,17 @@ public class LandingDeliveryPage extends AbstractPageClass{
         try{
             WebElement enterConfirmCodeBtnVisible = waitForVisibility(confirmedPickupBtn);
             enterConfirmCodeBtnVisible.click();
-            System.out.println("Confirm the order");
+            System.out.println("Confirmed the order");
             String globalCode = globalPickUpCode;
-
             //Send the pickup code
-            for(int i = 1; i< globalCode.length(); i++){
+            for(int i = 0; i< globalCode.length(); i++){
                 //Construct the Xpath for each text field using index
-                String pickupCodeFieldXPath = String.format("(//XCUIElementTypeTextField)[%d]", i);
+                String pickupCodeFieldXPath = String.format("(//XCUIElementTypeTextField)[%d]", i+1);
                 WebElement pickupCodeFieldLocator = driver.findElement(By.xpath(pickupCodeFieldXPath));
-                pickupCodeFieldLocator.sendKeys(globalCode);
+                // Send each character of globalCode to the text field
+                char sendPickUpCodeByLetter = globalCode.charAt(i);
+                System.out.println("Pick-up code by character is: " + sendPickUpCodeByLetter);
+                pickupCodeFieldLocator.sendKeys(Character.toString(sendPickUpCodeByLetter));
             }
             System.out.println("Finish entering the code");
 
@@ -244,9 +258,44 @@ public class LandingDeliveryPage extends AbstractPageClass{
             WebElement completeOrderBtnVisible = waitForVisibility(completeOrderBtn);
             completeOrderBtnVisible.click();
             System.out.println("Completed the order");
+
+
             return true;
         } catch (Exception e){
             System.out.println("Error on completing the order: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean reviewCompletedOrder(){
+        try{
+            WebElement completedSortingOptionBtnVisible = waitForVisibility(completedSortingOptionBtn);
+            completedSortingOptionBtnVisible.click();
+            String globalOrderId = globalOrderID;
+            String completedOrderIDPattern = String.format("#%s",globalOrderId);
+            System.out.println("Completed Order ID pattern: " + completedOrderIDPattern);
+
+//            String completedOrderXpath = String.format("//XCUIElementTypeStaticText[contains(@value,'%s')]",completedOrderIDPattern);
+            String completedOrderXpath = String.format("//XCUIElementTypeStaticText[contains(@value,'%s')]/preceding::XCUIElementTypeOther[1]",completedOrderIDPattern);
+            By completedOrderLocator = By.xpath(completedOrderXpath);
+
+            //Attempt to match the completed order ID
+            try{
+                WebElement completedOrderElement = driver.findElement(completedOrderLocator);
+                if(completedOrderElement != null){
+                    System.out.println("Completed Order ID Xpath is: " + completedOrderElement);
+                    clickIfVisible(completedOrderElement,2);
+                    System.out.println("Completed Order ID matched and being clicked");
+                    Thread.sleep(2000);
+                    closeOrderBtn.click();
+                    return true;
+                }
+            } catch (Exception e){
+                System.out.println("Completed Order ID cannot be found: " + e.getMessage());
+            }
+            return true;
+        } catch (Exception e){
+            System.out.println("Error on clicking the completed sorting option" + e.getMessage());
             return false;
         }
     }

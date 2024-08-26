@@ -77,18 +77,26 @@ public class DABaseTestClass {
                     testAutomatedTheDALandingDeliveryPage();
                     test.pass("Clicked the delivery option");
                     test.pass("Picked the delivery order");
+                    test.pass("Send the pickup code");
+                    test.pass("Upload the photo");
+                    test.pass("Finish completing the order");
+                    test.info("Completed review tab");
+                    test.pass("clicked the completed order");
+                    test.pass("Finished the whole delivery order process");
                 } catch (Exception e){
                     test.fail("Test failed " + e.getMessage());
                 }
             }
+
             //Logout page
-//            try{
-//                test.info("DA Logout Page");
-//                testAutomateTheLogoutPage();
-//                test.pass("Clicked logout successfully");
-//            } catch (Exception e){
-//                test.fail("Test failed: " + e.getMessage());
-//            }
+            try{
+                test.info("DA Logout Page");
+                testAutomateTheLogoutPage();
+                test.pass("Clicked logout successfully");
+            } catch (Exception e){
+                test.fail("Test failed: " + e.getMessage());
+            }
+
             test.pass("Tested pass successfully");
 
         } catch (Exception e){

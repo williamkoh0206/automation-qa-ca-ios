@@ -10,7 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import CATests.utils.ConfigLoader;
 
-public class PackageInfoPage extends AbstractPageClass{
+public class PackageInfoPage extends AbstractPageClass {
     // call the configloader to get the values we want to input
     private ConfigLoader configLoader;
 
@@ -91,126 +91,132 @@ public class PackageInfoPage extends AbstractPageClass{
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@value='Remarks (Optional)']/following::XCUIElementTypeTextView")
     private WebElement remarksInputField;
 
+    @iOSXCUITFindBy(accessibility = "Merchant order number (optional)")
+    private WebElement enterMerchantOrderText;
+
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@value='Merchant order number (optional)']/following::XCUIElementTypeTextView")
+    private WebElement enterMerchantOrderInputField;
+
     @iOSXCUITFindBy(accessibility = "Done")
     private WebElement doneRemarksPopUp;
 
     @iOSXCUITFindBy(accessibility = "ggv__order_detail__footer__button__review_order")
     private WebElement reviewOrderBtn;
 
-    public boolean selectPackageContent(){
-        try{
+    public boolean selectPackageContent() {
+        try {
             String packageContent = configLoader.getProperty("CONTENT_TYPE");
-            if (packageContent.equalsIgnoreCase("Food / Drinks")){
+            if (packageContent.equalsIgnoreCase("Food / Drinks")) {
                 WebElement foodDrinksOptionVisibility = waitForVisibility(foodDrinksOption);
                 foodDrinksOptionVisibility.click();
                 return true;
-            } else if (packageContent.equalsIgnoreCase("Flowers / Gifts")){
+            } else if (packageContent.equalsIgnoreCase("Flowers / Gifts")) {
                 WebElement flowerOrGiftsVisibility = waitForVisibility(flowersGiftsOption);
                 flowerOrGiftsVisibility.click();
                 return true;
-            } else if (packageContent.equalsIgnoreCase("Electronics")){
+            } else if (packageContent.equalsIgnoreCase("Electronics")) {
                 WebElement electronicsOptionVisibility = waitForVisibility(ElectronicsOption);
                 electronicsOptionVisibility.click();
                 return true;
-            } else if (packageContent.equalsIgnoreCase("Medication")){
+            } else if (packageContent.equalsIgnoreCase("Medication")) {
                 WebElement medicationOptionVisibility = waitForVisibility(MedicationOption);
                 medicationOptionVisibility.click();
                 return true;
-            } else if (packageContent.equalsIgnoreCase("Household")){
+            } else if (packageContent.equalsIgnoreCase("Household")) {
                 WebElement householdOptionVisibility = waitForVisibility(HouseholdOption);
                 householdOptionVisibility.click();
                 return true;
-            } else if (packageContent.equalsIgnoreCase("Other")){
+            } else if (packageContent.equalsIgnoreCase("Other")) {
                 WebElement otherOptionVisibility = waitForVisibility(otherOption);
                 otherOptionVisibility.click();
                 return true;
             }
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error clicking the package content : " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean selectSizeOption(){
-        try{
+    public boolean selectSizeOption() {
+        try {
             WebElement selectSizeOptionVisibility = waitForVisibility(selectSizeOption);
             selectSizeOptionVisibility.click();
 
             String selectedSize = configLoader.getProperty("SIZE");
-            if(selectedSize.equalsIgnoreCase("20")){
+            if (selectedSize.equalsIgnoreCase("20")) {
                 WebElement twentyCmOptionVisibility = waitForVisibility(selectTwentyCmOption);
                 twentyCmOptionVisibility.click();
                 return true;
-            } else if(selectedSize.equalsIgnoreCase("30")){
+            } else if (selectedSize.equalsIgnoreCase("30")) {
                 WebElement thirtyCmOptionVisibility = waitForVisibility(selectThirtyCmOption);
                 thirtyCmOptionVisibility.click();
                 return true;
-            } else if(selectedSize.equalsIgnoreCase("40")){
+            } else if (selectedSize.equalsIgnoreCase("40")) {
                 WebElement fortyCmOptionVisibility = waitForVisibility(selectFortyCmOption);
                 fortyCmOptionVisibility.click();
                 return true;
-            } else if(selectedSize.equalsIgnoreCase("50")){
+            } else if (selectedSize.equalsIgnoreCase("50")) {
                 WebElement fiftyCmOptionVisibility = waitForVisibility(selectFiftyCmOption);
                 fiftyCmOptionVisibility.click();
                 return true;
-            } else if(selectedSize.equalsIgnoreCase("60")){
+            } else if (selectedSize.equalsIgnoreCase("60")) {
                 WebElement sixtyCmOptionVisibility = waitForVisibility(selectSixtyCmOption);
                 sixtyCmOptionVisibility.click();
                 return true;
             }
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error clicking the size option : " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean selectWeightOption(){
-        try{
+    public boolean selectWeightOption() {
+        try {
             WebElement selectWeightOptionVisibility = waitForVisibility(selectWeightOption);
             selectWeightOptionVisibility.click();
 
             String weightOption = configLoader.getProperty("WEIGHT");
-            if(weightOption.equalsIgnoreCase("5")){
+            if (weightOption.equalsIgnoreCase("5")) {
                 WebElement fiveKgOptionVisibility = waitForVisibility(selectFiveKgOption);
                 fiveKgOptionVisibility.click();
                 return true;
-            } else if(weightOption.equalsIgnoreCase("10")){
+            } else if (weightOption.equalsIgnoreCase("10")) {
                 WebElement tenKgOptionVisibility = waitForVisibility(selectTenKgOption);
                 tenKgOptionVisibility.click();
                 return true;
-            } else if(weightOption.equalsIgnoreCase("15")){
+            } else if (weightOption.equalsIgnoreCase("15")) {
                 WebElement fifteenKgOptionVisibility = waitForVisibility(selectFifteenKgOption);
                 fifteenKgOptionVisibility.click();
                 return true;
-            } else if(weightOption.equalsIgnoreCase("20")){
+            } else if (weightOption.equalsIgnoreCase("20")) {
                 WebElement lessThanTwentyKgOptionVisibility = waitForVisibility(selectLessThanTwentyKgOption);
                 lessThanTwentyKgOptionVisibility.click();
                 return true;
             }
             return true;
-            } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error clicking the weight option : " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean selectBuyForYouOption(){
-        try{
+    public boolean selectBuyForYouOption() {
+        try {
             String buyForYouFlag = configLoader.getProperty("BUY_FLAG");
-            if(buyForYouFlag.equalsIgnoreCase("true")){
+            if (buyForYouFlag.equalsIgnoreCase("true")) {
                 WebElement buyForYouOptionVisibility = waitForVisibility(buyForYouOption);
                 buyForYouOptionVisibility.click();
                 String buyOption = configLoader.getProperty("BUY_OPTION");
-                if(buyOption.equalsIgnoreCase("500")){
+                if (buyOption.equalsIgnoreCase("500")) {
                     WebElement itemsValueLessThanFiveHundredVisibility = waitForVisibility(itemsValueLessThanFiveHundred);
                     itemsValueLessThanFiveHundredVisibility.click();
                     return true;
-                } else if(buyOption.equalsIgnoreCase("1000")){
+                } else if (buyOption.equalsIgnoreCase("1000")) {
                     WebElement itemsValueLessThanOneThousandVisibility = waitForVisibility(itemsValueWithinOneThousand);
                     itemsValueLessThanOneThousandVisibility.click();
                     return true;
@@ -221,44 +227,70 @@ public class PackageInfoPage extends AbstractPageClass{
                 }
             }
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error clicking the buy for you option : " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean enterRemarks(){
-        try{
+    public boolean enterRemarks() {
+        try {
             String remarksFlag = configLoader.getProperty("REMARKS_FLAG");
-            if(remarksFlag.equalsIgnoreCase("true")){
+            if (remarksFlag.equalsIgnoreCase("true")) {
                 String remarks = configLoader.getProperty("DELIVERY_REMARKS");
                 WebElement remarksInputTextVisibility = waitForVisibility(remarksInputText);
                 remarksInputTextVisibility.click();
                 WebElement remarksInputFieldVisibility = waitForVisibility(remarksInputField);
                 remarksInputFieldVisibility.sendKeys(remarks);
                 System.out.println("Remarks sent is: " + remarks);
-                WebElement confirmedRemarksPopUpVisibility =  waitForVisibility(doneRemarksPopUp);
+                WebElement confirmedRemarksPopUpVisibility = waitForVisibility(doneRemarksPopUp);
                 confirmedRemarksPopUpVisibility.click();
+                return true;
+            } else if (remarksFlag.equalsIgnoreCase("false")) {
                 return true;
             }
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error entering the remarks : " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean clickReviewOrderBtn(){
-        try{
+    public boolean enterMerchantOrderNumber() {
+        try {
+            String enterMerchantOrderNumberFlag = configLoader.getProperty("MERCHANT_ORDER_FLAG");
+            String accountType = configLoader.getProperty("ACCOUNT_TYPE");
+            if (accountType.equalsIgnoreCase("business") && enterMerchantOrderNumberFlag.equalsIgnoreCase("true")) {
+                String merchantOrderNumber = configLoader.getProperty("MERCHANT_REMARKS");
+                WebElement clickMerchantOrderTextVisibility = waitForVisibilityWithScroll(enterMerchantOrderText,"Merchant order number (optional)");
+                clickMerchantOrderTextVisibility.click();
+                WebElement enterMerchantOrderFieldVisibility = waitForVisibility(enterMerchantOrderInputField);
+                enterMerchantOrderFieldVisibility.sendKeys(merchantOrderNumber);
+                System.out.println("Merchant order number sent is: " + merchantOrderNumber);
+                return true;
+            } else if (enterMerchantOrderNumberFlag.equalsIgnoreCase("false")) {
+                return true;
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error entering the merchant order numbers " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean clickReviewOrderBtn() {
+        try {
             WebElement reviewOrderBtnVisibility = waitForVisibility(reviewOrderBtn);
             reviewOrderBtnVisibility.click();
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error clicking the review order button : " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 }
+

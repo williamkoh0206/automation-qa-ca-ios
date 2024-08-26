@@ -42,6 +42,11 @@ public class PackageInfoPageTest {
         assertTrue(isRemarksEntered, "failed to enter the remarks");
         System.out.println("Enter remarks: Success");
 
+        //enter merchant order number
+        boolean isMerchantOrderEntered = packageInfoPage.enterMerchantOrderNumber();
+        assertTrue(isMerchantOrderEntered, "failed to enter the merchant order number");
+        System.out.println("Enter merchant order number: Success");
+
         //click review order button
         boolean isReviewOrderBtnClicked = packageInfoPage.clickReviewOrderBtn();
         assertTrue(isReviewOrderBtnClicked, "failed to click on the review order button");

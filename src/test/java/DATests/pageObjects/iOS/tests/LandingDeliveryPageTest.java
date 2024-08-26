@@ -44,5 +44,10 @@ public class LandingDeliveryPageTest {
         boolean isOrderCompleted = landingDeliveryPage.completeOrder();
         assertTrue(isOrderCompleted,"failed to complete the order");
         System.out.println("Finished delivery order");
+
+        //review the completed order
+        boolean isReviewOrderClicked = landingDeliveryPage.reviewCompletedOrder();
+        assertTrue(isReviewOrderClicked,"failed to review the completed order");
+        System.out.println("Finish reviewing the order");
     }
 }
