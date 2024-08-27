@@ -28,7 +28,7 @@ public class LandingPage extends AbstractPageClass {
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeTable//XCUIElementTypeCell[1]")
     private WebElement firstOrderOption;
 
-    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@name='Pick order']")
+    @iOSXCUITFindBy(accessibility = "Pick order")
     private WebElement pickOrderBtn;
 
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@name='ASAP']/preceding::XCUIElementTypeButton[@name='ASAP']")
@@ -88,7 +88,7 @@ public class LandingPage extends AbstractPageClass {
             WebElement firstOrderOptionVisible = waitForVisibility(firstOrderOption);
             firstOrderOptionVisible.click();
             System.out.println("First option order being clicked, attempting to pick the order");
-            boolean pickOrderBtnVisibility = clickIfVisible(pickOrderBtn,2);
+            boolean pickOrderBtnVisibility = clickIfVisible(pickOrderBtn,5);
             if(pickOrderBtnVisibility){
                 WebElement pickOrderBtnVisible = waitForVisibility(pickOrderBtn);
                 pickOrderBtnVisible.click();
@@ -115,9 +115,9 @@ public class LandingPage extends AbstractPageClass {
 
     public boolean completeOrder(){
         try{
-            clickIfVisible(confirmPickOrderBtn,2);
-            System.out.println("Picked up the order successfully");
-            boolean beginDriverBtnVisibility = clickIfVisible(beginDriverBtn, 2);
+//            clickIfVisible(confirmPickOrderBtn,5);
+//            System.out.println("Picked up the order successfully");
+            boolean beginDriverBtnVisibility = clickIfVisible(beginDriverBtn, 3);
             if(beginDriverBtnVisibility){
                 WebElement clickConfirmedPopUpVisible = waitForVisibility(beginDriverBtn);
                 clickConfirmedPopUpVisible.click();

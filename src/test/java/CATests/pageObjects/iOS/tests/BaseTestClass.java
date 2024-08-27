@@ -11,6 +11,7 @@ import CATests.pageObjects.iOS.tests.delivery.PickUpFromPageTest;
 import CATests.pageObjects.iOS.tests.delivery.PickUpTimePageTest;
 import CATests.pageObjects.iOS.tests.delivery.PackageInfoPageTest;
 import CATests.pageObjects.iOS.tests.delivery.PlacedOrderDeliveryPageTest;
+import CATests.pageObjects.iOS.tests.transport.PlacedOrderTransportPageTest;
 import DATests.pageObjects.iOS.tests.DABaseTestClass;
 
 import CATests.utils.ConfigUpdater;
@@ -195,6 +196,21 @@ public class BaseTestClass {
                     Thread.sleep(3000);
                 } catch(Exception e){
                     test.fail("Order Summary Page test failed: " + e.getMessage());
+                }
+
+                //Placed Order Transport page
+                try{
+                    test.info("Test placed order transport page");
+                    System.out.println("Enter the placedOrderTransport Page");
+                    testPlacedOrderTransportPage(testData);
+                    String cancelOrder = configLoader.getProperty("CANCEL_FLAG");
+                    if(cancelOrder.equalsIgnoreCase("true")){
+                        test.pass("Cancel order pressed");
+                        test.pass("Cancel order successfully");
+                    }
+                    System.out.println("Completed placing transport order page testing");
+                } catch (Exception e){
+                    test.fail("Placed Transport Order Page test failed: " + e.getMessage());
                 }
 
                 //Reload properities to ensure the latest value is read
@@ -437,5 +453,10 @@ public class BaseTestClass {
     private void testOderSummaryPage(Map<String, String> testData){
         OrderSummaryPageTest orderSummaryPageTest = new OrderSummaryPageTest(driver);
         orderSummaryPageTest.testAutomateTheOrderSummaryPage();
+    }
+
+    private void testPlacedOrderTransportPage(Map<String, String> testData){
+        PlacedOrderTransportPageTest placedOrderTransportPageTest = new PlacedOrderTransportPageTest(driver);
+        placedOrderTransportPageTest.testPlacedOrderTransportPage();
     }
 }

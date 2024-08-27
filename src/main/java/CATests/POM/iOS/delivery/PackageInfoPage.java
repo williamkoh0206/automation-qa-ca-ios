@@ -9,6 +9,7 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import CATests.utils.ConfigLoader;
+import com.google.common.collect.ImmutableMap;
 
 public class PackageInfoPage extends AbstractPageClass {
     // call the configloader to get the values we want to input
@@ -94,7 +95,7 @@ public class PackageInfoPage extends AbstractPageClass {
     @iOSXCUITFindBy(accessibility = "Merchant order number (optional)")
     private WebElement enterMerchantOrderText;
 
-    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@value='Merchant order number (optional)']/following::XCUIElementTypeTextView")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@value='Merchant order number (optional)']/preceding::XCUIElementTypeTextView[1]")
     private WebElement enterMerchantOrderInputField;
 
     @iOSXCUITFindBy(accessibility = "Done")
@@ -244,10 +245,10 @@ public class PackageInfoPage extends AbstractPageClass {
                 WebElement remarksInputFieldVisibility = waitForVisibility(remarksInputField);
                 remarksInputFieldVisibility.sendKeys(remarks);
                 System.out.println("Remarks sent is: " + remarks);
-                WebElement confirmedRemarksPopUpVisibility = waitForVisibility(doneRemarksPopUp);
-                confirmedRemarksPopUpVisibility.click();
-                return true;
-            } else if (remarksFlag.equalsIgnoreCase("false")) {
+                //press the enter button
+                Actions actions = new Actions(driver);
+                actions.sendKeys(remarksInputFieldVisibility, Keys.RETURN).perform();
+                clickIfVisible(doneRemarksPopUp,2);
                 return true;
             }
             return true;
@@ -264,13 +265,14 @@ public class PackageInfoPage extends AbstractPageClass {
             String accountType = configLoader.getProperty("ACCOUNT_TYPE");
             if (accountType.equalsIgnoreCase("business") && enterMerchantOrderNumberFlag.equalsIgnoreCase("true")) {
                 String merchantOrderNumber = configLoader.getProperty("MERCHANT_REMARKS");
-                WebElement clickMerchantOrderTextVisibility = waitForVisibilityWithScroll(enterMerchantOrderText,"Merchant order number (optional)");
-                clickMerchantOrderTextVisibility.click();
+                WebElement enterMerchantOrderTextVisibility = waitForVisibilityWithScroll(enterMerchantOrderText,"Merchant order number (optional)");
+                enterMerchantOrderTextVisibility.click();
                 WebElement enterMerchantOrderFieldVisibility = waitForVisibility(enterMerchantOrderInputField);
                 enterMerchantOrderFieldVisibility.sendKeys(merchantOrderNumber);
                 System.out.println("Merchant order number sent is: " + merchantOrderNumber);
-                return true;
-            } else if (enterMerchantOrderNumberFlag.equalsIgnoreCase("false")) {
+                //press the enter button
+                Actions actions = new Actions(driver);
+                actions.sendKeys(enterMerchantOrderFieldVisibility, Keys.RETURN).perform();
                 return true;
             }
             return true;
